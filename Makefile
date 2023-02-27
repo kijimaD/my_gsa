@@ -4,11 +4,11 @@ DOCKER_TAG := latest
 
 .PHONY: build
 build: ## Build go module
-	go build -o ./bin/go_skel .
+	go build -o ./bin/my_gsa .
 
 .PHONY: build-image
 build-image: ## Build image for deploy
-	docker build -t kijimad/go_skel:${DOCKER_TAG} \
+	docker build -t kijimad/my_gsa:${DOCKER_TAG} \
 	--target release ./
 
 .PHONY: build-local
