@@ -37,8 +37,9 @@ lint: ## Run lint
 	docker run --rm -v ${PWD}:/app -w /app golang:1.20 go vet ./...
 
 .PHONY: run
-run: ## Run
-	go run .
+run: ## Run lint
+	go build -o bin/analyzer .
+	go vet -vettool=bin/analyzer
 
 .PHONY: test
 test: ## Run test

@@ -1,10 +1,8 @@
 package main
 
 import (
-	"fmt"
-	"os"
+	"github.com/kijimaD/my_gsa/gopher"
+	"golang.org/x/tools/go/analysis/unitchecker"
 )
 
-func main() {
-	fmt.Fprintln(os.Stdout, "Hello world")
-}
+func main() { unitchecker.Main(gopher.Analyzer) }
