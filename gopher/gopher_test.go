@@ -1,4 +1,4 @@
-package gopher
+package gopher_sample
 
 import (
 	"testing"

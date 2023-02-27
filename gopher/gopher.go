@@ -1,7 +1,7 @@
 // https://docs.google.com/presentation/d/1I4pHnzV2dFOMbRcpA-XD0TaLcX6PBKpls6WxGHoMjOg/edit#slide=id.g6298a0e67590aa1e_6
 // 識別子gopherを検出する
 
-package gopher
+package gopher_sample
 
 import (
 	"go/ast"
