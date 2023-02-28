@@ -6,13 +6,13 @@ import (
 )
 
 var Analyzer = &analysis.Analyzer{
-	Name:     "simple",
-	Doc:      "simple is simple analyzer.",
+	Name:     "trashcomment",
+	Doc:      "transhcomment is for detecting useless comment.",
 	Run:      run,
 	Requires: []*analysis.Analyzer{inspect.Analyzer},
 }
 
-var syntaxLen = 3
+var syntaxLen = 3 // exclude "// "
 
 func run(pass *analysis.Pass) (interface{}, error) {
 	for _, f := range pass.Files {
