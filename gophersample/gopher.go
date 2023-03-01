@@ -4,12 +4,15 @@
 package gophersample
 
 import (
+	"errors"
 	"go/ast"
 
 	"golang.org/x/tools/go/analysis"
 	"golang.org/x/tools/go/analysis/passes/inspect"
 	"golang.org/x/tools/go/ast/inspector"
 )
+
+var errAssert = errors.New("error: type assert failed")
 
 var Analyzer = &analysis.Analyzer{
 	Name:     "simple",
@@ -19,7 +22,11 @@ var Analyzer = &analysis.Analyzer{
 }
 
 func run(pass *analysis.Pass) (interface{}, error) {
-	inspect := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
+	inspect, ok := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
+	if !ok {
+		return nil, errAssert
+	}
+
 	inspect.Preorder([]ast.Node{new(ast.Ident)}, func(n ast.Node) {
 		i, ok := n.(*ast.Ident)
 		if ok {

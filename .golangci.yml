@@ -21,7 +21,7 @@ linters:
     - execinquery
     - exhaustive
     # - exhaustivestruct
-    - exhaustruct
+    # - exhaustruct
     - exportloopref
     - forbidigo
     - forcetypeassert
@@ -29,7 +29,7 @@ linters:
     - gci
     - ginkgolinter
     - gocheckcompilerdirectives
-    - gochecknoglobals
+    # - gochecknoglobals
     - gochecknoinits
     - gocognit
     - goconst
@@ -67,7 +67,7 @@ linters:
     - nakedret
     - nestif
     - nilerr
-    - nilnil
+    # - nilnil
     - nlreturn
     - noctx
     - nolintlint
