@@ -12,12 +12,11 @@ import (
 func main() {
 	unitchecker.Main(trashcomment.Analyzer, gophersample.Analyzer)
 
-	// test ================
+	demo()
+}
 
-	// trashcomment
-	// a
-
-	// gophersample
+// warn.
+func demo() {
 	gopher := "sample"
 	buf := &bytes.Buffer{}
 	fmt.Fprint(buf, gopher)
