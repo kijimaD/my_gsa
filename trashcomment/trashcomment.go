@@ -40,7 +40,6 @@ func run(pass *analysis.Pass) (interface{}, error) {
 			if count < warnLen+syntaxLen {
 				pass.Reportf(funcdecl.Pos(), "useless function comment!")
 			}
-
 		}
 	}
 
