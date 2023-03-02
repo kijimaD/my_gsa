@@ -32,11 +32,15 @@ func run(pass *analysis.Pass) (interface{}, error) {
 				continue
 			}
 
+			count := 0
 			for _, c := range funcdecl.Doc.List {
-				if len(c.Text) < warnLen+syntaxLen {
-					pass.Reportf(c.Pos(), "useless function comment!")
-				}
+				count += len(c.Text)
 			}
+
+			if count < warnLen+syntaxLen {
+				pass.Reportf(funcdecl.Pos(), "useless function comment!")
+			}
+
 		}
 	}
 

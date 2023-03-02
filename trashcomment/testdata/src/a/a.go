@@ -2,8 +2,8 @@ package a
 
 import "fmt"
 
-// ここでassertしたいが、assertコメントの長さに含まれてしまうのでうまく検証できない
-// a // can't assert...
+// ここでassertしたいが、assertコメントの長さが含まれてしまうせいで検証できない
+// a // assert...
 
 // This is OK
 func f() {
@@ -18,4 +18,11 @@ func f() {
 
 func dummy() {
 	// not exist function comment
+}
+
+// this
+// is
+// safe
+func safe() {
+	// check multi line properly
 }
