@@ -2,9 +2,6 @@ package a
 
 import "fmt"
 
-// ここでassertしたいが、assertコメントの長さが含まれてしまうせいで検証できない
-// a // assert...
-
 // This is OK
 func f() {
 	// aaa // This is OK
@@ -24,5 +21,10 @@ func dummy() {
 // is
 // safe
 func safe() {
-	// check multi line properly
+	// check multi line function comment
+}
+
+// ... // FIXME want `useless function comment!`
+func warn() {
+	// ↑assertしたいが、wantコメントの長さが含まれてしまうせいで検証できない
 }
