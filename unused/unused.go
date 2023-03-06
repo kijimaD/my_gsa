@@ -35,5 +35,26 @@ func run(pass *analysis.Pass) (interface{}, error) {
 }
 
 func skip(o types.Object) bool {
+	// 公開関数・フィールドは除外
+	if o == nil || o.Parent() == types.Universe || o.Exported() {
+		return true
+	}
+
+	switch o := o.(type) {
+	case *types.PkgName:
+		return true
+	case *types.Var:
+	case *types.Func:
+		// main
+		if o.Name() == "main" && o.Pkg().Name() == "main" {
+			return true
+		}
+
+		// init
+		if o.Name() == "init" && o.Pkg().Scope() == o.Parent() {
+			return true
+		}
+	}
+
 	return false
 }
