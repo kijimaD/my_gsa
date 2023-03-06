@@ -1,6 +1,6 @@
 // https://github.com/gostaticanalysis/unused/blob/17bc41fa0d5fdae5bb1a28f83236fa0dc574b666/testdata/src/a/a.go
 
-package a
+package main
 
 import "fmt"
 

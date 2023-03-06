@@ -5,6 +5,7 @@ package unused
 import (
 	"go/types"
 
+	"github.com/gostaticanalysis/analysisutil"
 	"github.com/gostaticanalysis/ident"
 	"golang.org/x/tools/go/analysis"
 )
@@ -41,11 +42,13 @@ func skip(o types.Object) bool {
 	}
 
 	switch o := o.(type) {
+	// パッケージ名は1つしかないので除外
 	case *types.PkgName:
 		return true
 	case *types.Var:
 	case *types.Func:
 		// main
+		// mainパッケージのmain()は呼び出しはない
 		if o.Name() == "main" && o.Pkg().Name() == "main" {
 			return true
 		}
@@ -54,7 +57,31 @@ func skip(o types.Object) bool {
 		if o.Name() == "init" && o.Pkg().Scope() == o.Parent() {
 			return true
 		}
+
+		// method
+		sig, ok := o.Type().(*types.Signature)
+		if ok {
+			if recv := sig.Recv(); recv != nil {
+				for _, i := range analysisutil.Interfaces(o.Pkg()) {
+					// インターフェースの中の、関数を実装していれば使っているということになる
+					if i == recv.Type() || (types.Implements(recv.Type(), i) && has(i, o)) {
+						return true
+					}
+				}
+			}
+		}
+
 	}
 
+	return false
+}
+
+func has(intf *types.Interface, m *types.Func) bool {
+	for i := 0; i < intf.NumMethods(); i++ {
+		if intf.Method(i).Name() == m.Name() {
+			// インターフェースが実装しているすべてのメソッドの中と、関数の名前が一致するかどうか
+			return true
+		}
+	}
 	return false
 }
