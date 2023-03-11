@@ -53,8 +53,8 @@ func skip(o types.Object) bool {
 			return true
 		}
 	case *types.Func:
-		// main
 		// mainパッケージのmain()は呼び出しはない
+		// main
 		if o.Name() == "main" && o.Pkg().Name() == "main" {
 			return true
 		}

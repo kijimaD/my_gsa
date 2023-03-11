@@ -6,12 +6,13 @@ import (
 
 	"github.com/kijimaD/my_gsa/argcount"
 	"github.com/kijimaD/my_gsa/gophersample"
+	"github.com/kijimaD/my_gsa/structctx"
 	"github.com/kijimaD/my_gsa/trashcomment"
 	"golang.org/x/tools/go/analysis/unitchecker"
 )
 
 func main() {
-	unitchecker.Main(trashcomment.Analyzer, gophersample.Analyzer, argcount.Analyzer)
+	unitchecker.Main(trashcomment.Analyzer, gophersample.Analyzer, argcount.Analyzer, structctx.Analyzer)
 
 	demo("1", "2", "3", "4", "5")
 }
