@@ -14,7 +14,7 @@ var errAssert = errors.New("error: type assert failed")
 
 var Analyzer = &analysis.Analyzer{
 	Name:     "privatetag",
-	Doc:      "detect private tag.",
+	Doc:      "detect private field tag.",
 	Run:      run,
 	Requires: []*analysis.Analyzer{inspect.Analyzer},
 }
