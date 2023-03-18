@@ -6,6 +6,8 @@ import (
 	"fmt"
 )
 
+var ctx context.Context
+
 type I interface{ M() }
 
 type T1 struct {

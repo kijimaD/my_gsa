@@ -36,11 +36,13 @@ func run(pass *analysis.Pass) (interface{}, error) {
 
 func ctxInField(o types.Object) bool {
 	// 未定義だとスルー
+	// なくてもOK?
 	if o == nil {
 		return false
 	}
 
 	// ユニバースブロックで定義されてるとスルー
+	// なくてもOK?
 	if o.Parent() == types.Universe {
 		return false
 	}
@@ -50,19 +52,19 @@ func ctxInField(o types.Object) bool {
 		return false
 	}
 
-	// 変数だとスルー
-	v, isVar := o.(*types.Var)
-	if !isVar || !v.IsField() || v.Anonymous() {
+	// 変数ではない・フィールドではない・無名関数だとスルー
+	v, ok := o.(*types.Var)
+	if !ok || !v.IsField() || v.Anonymous() {
 		return false
 	}
 
-	// 構造体のフィールドの場合
 	var st types.Type
+	// 構造体一覧をループ
 	for n, s := range structs(v.Pkg()) {
-		// structがフィールドを持つとき
+		// structがフィールドvを持つとき(vがフィールドの場合)
 		if hasField(s, v) {
 			// スコープから構造体の識別子名で検索して、特定
-			// stは型名
+			// stは構造体の型名。T1, T2, T3...
 			st = v.Pkg().Scope().Lookup(n).Type()
 			break
 		}
@@ -72,12 +74,14 @@ func ctxInField(o types.Object) bool {
 		return false
 	}
 
+	// 渡した型のポインター型を得る
+	// *T1, *T2, *T3...
 	stptr := types.NewPointer(st)
 
 	// importしてるものでループ
 	// テストコードだとb, context, fmt...
 	for _, pkg := range v.Pkg().Imports() {
-		// インポートしてるやつのインターフェースでループ
+		// インポートしてるやつのインターフェース一覧でループ
 		for _, i := range interfaces(pkg) {
 			// 構造体のフィールドがインターフェースを実装してるものがあったらスルー
 			if !i.Empty() &&
