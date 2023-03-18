@@ -14,13 +14,13 @@ type T1 struct {
 
 type T2 struct {
 	fmt.Stringer
+	// 埋め込みでインターフェースを満たしているため、スルー
 	ctx context.Context // OK
-	// なんでここはOKなんだ?
 }
 
 type T3 struct {
+	// ポインタのとき検知する
 	ctx *context.Context // want "struct include context!"
-	// ポインタのときも検知しないといけない
 }
 
 type T4 struct {
@@ -39,8 +39,8 @@ type T6 struct {
 func (*T6) M() {}
 
 type T7 struct {
+	// Stringer interface を満たすので、スルー
 	ctx context.Context // OK
-	// メソッドを持つ構造体のとき、スルー
 }
 
 var _ fmt.Stringer = (*T7)(nil)
@@ -53,3 +53,8 @@ type T8 struct {
 }
 
 func (t *T8) M() {}
+
+type T9 struct {
+	// エクスポートしてるときはスルー
+	CTX context.Context // OK
+}

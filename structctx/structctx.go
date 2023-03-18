@@ -56,6 +56,91 @@ func ctxInField(o types.Object) bool {
 		return false
 	}
 
+	// 構造体のフィールドの場合
+	var st types.Type
+	for n, s := range structs(v.Pkg()) {
+		// structがフィールドを持つとき
+		if hasField(s, v) {
+			// スコープから構造体の識別子名で検索して、特定
+			// stは型名
+			st = v.Pkg().Scope().Lookup(n).Type()
+			break
+		}
+	}
+
+	if st == nil {
+		return false
+	}
+
+	stptr := types.NewPointer(st)
+
+	// importしてるものでループ
+	// テストコードだとb, context, fmt...
+	for _, pkg := range v.Pkg().Imports() {
+		// インポートしてるやつのインターフェースでループ
+		for _, i := range interfaces(pkg) {
+			// 構造体のフィールドがインターフェースを実装してるものがあったらスルー
+			if !i.Empty() &&
+				(types.Implements(st, i) ||
+					types.Implements(stptr, i)) {
+				return false
+			}
+		}
+	}
+
 	// 警告
 	return true
+}
+
+// copy from github.com/gostaticanalysis/analysisutil
+// パッケージの構造体の一覧を返す
+func structs(pkg *types.Package) map[string]*types.Struct {
+	structs := map[string]*types.Struct{}
+
+	for _, n := range pkg.Scope().Names() {
+		o := pkg.Scope().Lookup(n)
+		if o != nil {
+			s, ok := o.Type().Underlying().(*types.Struct)
+			if ok {
+				structs[n] = s
+			}
+		}
+	}
+
+	return structs
+}
+
+// copy from github.com/gostaticanalysis/analysisutil
+// structがフィールドを持っているか判定
+func hasField(s *types.Struct, f *types.Var) bool {
+	if s == nil || f == nil {
+		return false
+	}
+
+	for i := 0; i < s.NumFields(); i++ {
+		// 構造体->フィールドと、引数のvarを比較
+		if s.Field(i) == f {
+			return true
+		}
+	}
+
+	return false
+}
+
+// copy from github.com/gostaticanalysis/analysisutil
+// パッケージのインターフェース一覧取得
+func interfaces(pkg *types.Package) map[string]*types.Interface {
+	ifs := map[string]*types.Interface{}
+
+	for _, n := range pkg.Scope().Names() {
+		o := pkg.Scope().Lookup(n)
+		if o != nil {
+			i, ok := o.Type().Underlying().(*types.Interface)
+			if ok {
+				ifs[n] = i
+			}
+		}
+	}
+
+	return ifs
 }
